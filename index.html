@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Programme des Randonnées</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1 { text-align: center; color: #2c3e50; }
+    .rando { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 15px; }
+    .remarques { background: #ffecec; border-left: 5px solid #e74c3c; padding: 10px; margin-top: 10px; border-radius: 8px; }
+    .map-link { display: inline-block; margin-top: 10px; padding: 8px 12px; background: #27ae60; color: white; border-radius: 6px; text-decoration: none; }
+    .map-link:hover { background: #1e8449; }
+  </style>
+</head>
+<body>
+
+<h1>Programme des Randonnées</h1>
+<div id="listeRandos"></div>
+
+<script>
+  const liste = document.getElementById("listeRandos");
+
+  function chargerRandos() {
+    liste.innerHTML = "";
+    const randos = JSON.parse(localStorage.getItem("randos")) || [];
+    randos.forEach((r) => {
+      const div = document.createElement("div");
+      div.className = "rando";
+      div.innerHTML = `
+        <h2>${r.date} - ${r.titre}</h2>
+        <p>📍 <b>Lieu :</b> ${r.lieu}</p>
+        <p>🕘 <b>Départ :</b> ${r.heure}</p>
+        <p>🚶‍♂️ <b>Kilométrage :</b> ${r.km} km</p>
+        <p>⛰️ <b>Dénivelé :</b> ${r.denivele} m</p>
+        <p>👤 <b>Animateur :</b> ${r.accompagnateur}</p>
+        <a class="map-link" href="https://maps.google.com/?q=${r.lat},${r.lon}" target="_blank">🌍 Voir sur Google Maps</a>
+        ${r.remarques ? `<div class="remarques"><b>⚠️ Remarques :</b><br>${r.remarques}</div>` : ""}
+      `;
+      liste.appendChild(div);
+    });
+  }
+
+  chargerRandos();
+</script>
+
+</body>
+</html>
