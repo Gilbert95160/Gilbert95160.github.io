@@ -8,7 +8,7 @@
   <style>
     :root{
       --bg:#f7f7f6; --card:#ffffff; --ink:#203020; --muted:#5c6b5c; --brand:#2a6f3b; --brand-2:#1f5132; --accent:#e7f4ea;
-      --danger:#c52b31; --warn:#b58005; --ok:#18794e; --ring: 0 0 0 3px rgba(42,111,59,.2);
+      --danger:#c52b31; --ring: 0 0 0 3px rgba(42,111,59,.2);
       --radius:18px; --shadow:0 10px 25px rgba(0,0,0,.08);
     }
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
@@ -21,30 +21,20 @@
     .btn.ghost{background:transparent}
     .btn:focus{outline:none;box-shadow:var(--ring)}
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    @media(min-width:740px){.grid{grid-template-columns:1fr}}
-
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 18px 14px;position:relative;border:1px solid #e7ece7}
     .title{font-size:20px;font-weight:800;margin:0 0 6px}
     .desc{color:var(--muted);margin:0 0 12px}
     .row{display:flex;flex-wrap:wrap;gap:10px}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:#f3f6f3;border:1px solid #e2e8e2;font-weight:600}
-    .chip.badge{padding:8px 10px}
-    .chip.green{background:#eaf6ee;border-color:#cfe9d6;color:#135a2b}
-    .chip.amber{background:#fff6e6;border-color:#fde2b2;color:#6a4704}
-    .chip.red{background:#ffebeb;border-color:#f8c7c7;color:#7a1518}
-    .meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
-    @media(max-width:480px){.meta{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
     .meta .chip{justify-content:center}
-
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .actions .btn.danger{background:#fff;border-color:#f3c0c0;color:#a0181c}
     .actions .btn.map{background:var(--accent);border-color:#cfe9d6;color:#135a2b}
-
     .date-badge{position:absolute;right:14px;top:14px;background:var(--brand-2);color:#fff;border-radius:14px;padding:8px 10px;line-height:1;text-align:center;min-width:78px}
     .date-badge small{display:block;opacity:.9;font-weight:600}
     .date-badge strong{display:block;font-size:18px;margin-top:4px}
-
-    /* Form / Drawer */
+    .remarques{margin-top:14px;padding:12px 14px;border-left:5px solid var(--danger);background:#fff1f1;border-radius:12px;color:#7a1518;font-weight:600;white-space:pre-line}
     .drawer{position:fixed;inset:auto 0 0 0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.14);transform:translateY(100%);transition:transform .28s ease;z-index:30}
     .drawer.open{transform:translateY(0)}
     .drawer header{padding:14px 16px;border-bottom:1px solid #ecf1ec}
@@ -54,9 +44,7 @@
     textarea{min-height:80px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-    @media(max-width:560px){.two,.three{grid-template-columns:1fr 1fr}}
     .row-end{display:flex;gap:10px;justify-content:flex-end;padding:0 16px 16px}
-
     .empty{padding:24px;border:2px dashed #d9e1d9;border-radius:16px;color:#5a6a5a;text-align:center}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     a.btn{ text-decoration:none }
@@ -68,7 +56,7 @@
       <span aria-hidden="true" style="font-size:22px">🗓️</span>
       <h1>Randonnées programmées</h1>
       <div style="flex:1"></div>
-      <button id="addBtn" class="btn primary" title="Ajouter une randonnée">＋ Ajouter</button>
+      <button id="addBtn" class="btn primary">＋ Ajouter</button>
     </header>
     <div class="bar"></div>
 
@@ -78,12 +66,11 @@
     </div>
   </div>
 
-  <!-- Drawer / Form -->
-  <aside id="drawer" class="drawer" aria-hidden="true" aria-label="Édition randonnée">
+  <aside id="drawer" class="drawer">
     <header>
       <strong id="drawerTitle">Nouvelle randonnée</strong>
       <div style="flex:1"></div>
-      <button id="closeDrawer" class="btn ghost" aria-label="Fermer">✕</button>
+      <button id="closeDrawer" class="btn ghost">✕</button>
     </header>
     <form id="hikeForm">
       <input type="hidden" id="hidIndex" />
@@ -93,220 +80,122 @@
           <input id="date" type="date" required />
         </div>
         <div>
-          <label for="title">Titre de la randonnée</label>
-          <input id="title" type="text" placeholder="Forêt de Montmorency" required />
+          <label for="title">Titre</label>
+          <input id="title" type="text" required />
         </div>
       </div>
-
-      <label for="desc">Texte de présentation (court)</label>
-      <textarea id="desc" placeholder="Découverte de la forêt domaniale…"></textarea>
-
       <div class="two">
         <div>
-          <label for="lieu">Lieu de RDV</label>
-          <input id="lieu" type="text" placeholder="Parking de la mairie" />
+          <label for="heure">Heure de départ</label>
+          <input id="heure" type="time" />
         </div>
+        <div>
+          <label for="lieu">Lieu de RDV</label>
+          <input id="lieu" type="text" />
+        </div>
+      </div>
+      <label for="desc">Description</label>
+      <textarea id="desc"></textarea>
+      <div class="two">
         <div>
           <label for="accomp">Accompagnateur</label>
-          <input id="accomp" type="text" placeholder="Prénom Nom" />
+          <input id="accomp" type="text" />
+        </div>
+        <div>
+          <label for="gpx">Lien GPX (URL)</label>
+          <input id="gpx" type="url" />
         </div>
       </div>
-
-      <div class="three">
-        <div>
-          <label for="lat">Latitude</label>
-          <input id="lat" type="number" step="any" placeholder="48.987" />
-        </div>
-        <div>
-          <label for="lng">Longitude</label>
-          <input id="lng" type="number" step="any" placeholder="2.345" />
-        </div>
-        <div>
-          <label for="difficulty">Difficulté</label>
-          <select id="difficulty">
-            <option>Facile</option>
-            <option>Moyen</option>
-            <option>Difficile</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="three">
+      <div class="two">
         <div>
           <label for="distance">Kilométrage (km)</label>
-          <input id="distance" type="number" step="0.1" placeholder="12" />
+          <input id="distance" type="number" step="0.1" />
         </div>
         <div>
           <label for="denivele">Dénivelé (m)</label>
-          <input id="denivele" type="number" step="1" placeholder="350" />
-        </div>
-        <div>
-          <label for="duree">Durée (h)</label>
-          <input id="duree" type="text" placeholder="4h30" />
+          <input id="denivele" type="number" step="1" />
         </div>
       </div>
-
-      <div class="two">
-        <div>
-          <label for="gpx">Lien GPX (URL)</label>
-          <input id="gpx" type="url" placeholder="https://…/trace.gpx" />
-        </div>
-        <div>
-          <label for="places">Places (optionnel)</label>
-          <input id="places" type="text" placeholder="8/20" />
-        </div>
-      </div>
-
+      <label for="remarques">Remarques importantes</label>
+      <textarea id="remarques" placeholder="⚠️ Ne pas oublier son casse-croûte"></textarea>
       <div class="row-end">
-        <button type="button" id="exportBtn" class="btn">Exporter JSON</button>
-        <button type="button" id="importBtn" class="btn">Importer JSON</button>
-        <div style="flex:1"></div>
         <button type="reset" class="btn">Effacer</button>
         <button class="btn primary">Enregistrer</button>
       </div>
     </form>
   </aside>
 
-  <input id="filePicker" type="file" accept="application/json" class="sr-only" />
-
   <script>
-    // ————— Données (chargées / sauvegardées automatiquement dans le navigateur)
-    const KEY = 'rando-app:v1';
-    /** @type {Array} */
+    const KEY = 'rando-app:v2';
     let hikes = [];
-
-    // Helpers ——————————————————————————————————
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
-    const fmtDateBadge = (iso) => {
-      if(!iso) return {d:"", m:"", wd:""};
-      const d = new Date(iso + 'T12:00:00');
-      const wd = d.toLocaleDateString('fr-FR',{weekday:'short'}).replace('.','');
-      const day = d.toLocaleDateString('fr-FR',{day:'2-digit'});
-      const mon = d.toLocaleDateString('fr-FR',{month:'short'});
-      return {d:day, m:mon, wd:wd.charAt(0).toUpperCase()+wd.slice(1)}
-    }
+    const $ = s=>document.querySelector(s);
+    const $$ = s=>Array.from(document.querySelectorAll(s));
+    const fmtDateBadge = iso => {
+      if(!iso) return {d:"",m:"",wd:""};
+      const d = new Date(iso+'T12:00:00');
+      const wd = d.toLocaleDateString('fr-FR',{weekday:'short'});
+      return {d:d.getDate().toString().padStart(2,'0'),m:d.toLocaleDateString('fr-FR',{month:'short'}),wd:wd};
+    };
     const gmapsUrl = (lat,lng,label='') => (lat && lng) ? `https://maps.google.com/?q=${lat},${lng}${label?` (${encodeURIComponent(label)})`:''}` : null;
-    const save = () => localStorage.setItem(KEY, JSON.stringify(hikes));
-    const load = () => { try { hikes = JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { hikes=[] } };
+    const save = () => localStorage.setItem(KEY,JSON.stringify(hikes));
+    const load = () => {try{hikes=JSON.parse(localStorage.getItem(KEY)||'[]')}catch{hikes=[]}};
 
-    // Render ————————————————————————————————————
     function render(){
-      const wrap = $('#cards');
-      wrap.innerHTML = '';
-      if(!hikes.length){ $('#empty').hidden = false; return }
-      $('#empty').hidden = true;
-      // sort by date asc
-      hikes.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
+      const wrap=$('#cards');wrap.innerHTML='';
+      if(!hikes.length){$('#empty').hidden=false;return}
+      $('#empty').hidden=true;
+      hikes.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
       for(const [i,h] of hikes.entries()){
-        const {d,m,wd} = fmtDateBadge(h.date);
-        const diffClass = h.difficulty==='Difficile' ? 'red' : (h.difficulty==='Moyen' ? 'amber' : 'green');
-        const map = gmapsUrl(h.lat, h.lng, h.lieu);
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="date-badge" aria-hidden="true"><small>${wd || ''}</small><strong>${d || ''} ${m || ''}</strong></div>
+        const {d,m,wd}=fmtDateBadge(h.date);
+        const map=gmapsUrl(h.lat,h.lng,h.lieu);
+        const card=document.createElement('article');
+        card.className='card';
+        card.innerHTML=`
+          <div class="date-badge"><small>${wd}</small><strong>${d} ${m}</strong></div>
           <h2 class="title">${escapeHtml(h.title||'Sans titre')}</h2>
+          ${h.heure?`<p class="desc">🕒 Départ : ${escapeHtml(h.heure)}</p>`:''}
           ${h.desc?`<p class="desc">${escapeHtml(h.desc)}</p>`:''}
           <div class="row">
             ${h.lieu?`<span class="chip">📍 ${escapeHtml(h.lieu)}</span>`:''}
-            ${h.places?`<span class="chip badge">👥 ${escapeHtml(h.places)}</span>`:''}
-            <span class="chip badge ${diffClass}">${h.difficulty||'Facile'}</span>
-          </div>
-          <div class="meta">
             ${h.distance?`<span class="chip">🚶 ${h.distance} km</span>`:''}
             ${h.denivele?`<span class="chip">⛰️ ${h.denivele} m</span>`:''}
-            ${h.duree?`<span class="chip">⏱️ ${escapeHtml(h.duree)}</span>`:''}
           </div>
           <div class="row" style="margin-top:10px">
             ${h.accomp?`<span class="chip">🧭 ${escapeHtml(h.accomp)}</span>`:''}
           </div>
+          ${h.remarques?`<div class="remarques">${h.remarques}</div>`:''}
           <div class="actions">
-            ${map?`<a class="btn map" target="_blank" rel="noopener" href="${map}">🗺️ Itinéraire</a>`:''}
-            ${h.gpx?`<a class="btn" target="_blank" rel="noopener" href="${h.gpx}">📄 GPX</a>`:''}
+            ${map?`<a class="btn map" target="_blank" href="${map}">🗺️ Itinéraire</a>`:''}
+            ${h.gpx?`<a class="btn" target="_blank" href="${h.gpx}">📄 GPX</a>`:''}
             <button class="btn" data-edit="${i}">✏️ Modifier</button>
             <button class="btn danger" data-del="${i}">🗑️ Supprimer</button>
-          </div>
-        `;
+          </div>`;
         wrap.appendChild(card);
       }
-      // attach actions
-      $$('[data-edit]').forEach(b=> b.onclick = () => edit(+b.dataset.edit));
-      $$('[data-del]').forEach(b=> b.onclick = () => del(+b.dataset.del));
+      $$('[data-edit]').forEach(b=>b.onclick=()=>edit(+b.dataset.edit));
+      $$('[data-del]').forEach(b=>b.onclick=()=>del(+b.dataset.del));
     }
 
-    function escapeHtml(s){ return String(s).replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])); }
+    function escapeHtml(s){return String(s).replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]));}
+    function edit(i){const h=hikes[i];if(!h)return;$('#drawerTitle').textContent='Modifier';$('#hidIndex').value=i;for(const k of ['date','title','heure','desc','lieu','accomp','lat','lng','distance','denivele','gpx','remarques']){const el=document.getElementById(k);if(el)el.value=h[k]??'';}openDrawer();}
+    function del(i){if(!confirm('Supprimer ?'))return;hikes.splice(i,1);save();render();}
 
-    function edit(i){
-      const h = hikes[i];
-      if(!h) return;
-      $('#drawerTitle').textContent = 'Modifier la randonnée';
-      $('#hidIndex').value = i;
-      for(const k of ['date','title','desc','lieu','accomp','lat','lng','difficulty','distance','denivele','duree','gpx','places']){
-        const el = document.getElementById(k);
-        if(el) el.value = h[k] ?? '';
-      }
-      openDrawer();
-    }
+    const drawer=$('#drawer');
+    function openDrawer(){drawer.classList.add('open')}
+    function closeDrawer(){drawer.classList.remove('open')}
 
-    function del(i){
-      if(!confirm('Supprimer cette fiche ?')) return;
-      hikes.splice(i,1); save(); render();
-    }
-
-    // Drawer handlers ——————————————————————————
-    const drawer = $('#drawer');
-    function openDrawer(){ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
-    function closeDrawer(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
-
-    // Form submit —————————————————————————————
-    $('#hikeForm').addEventListener('submit', (e)=>{
+    $('#hikeForm').addEventListener('submit',e=>{
       e.preventDefault();
-      const h = Object.fromEntries([
-        'date','title','desc','lieu','accomp','lat','lng','difficulty','distance','denivele','duree','gpx','places'
-      ].map(id=> [id, document.getElementById(id).value.trim()]));
-      // numberify
-      if(h.lat) h.lat = parseFloat(h.lat);
-      if(h.lng) h.lng = parseFloat(h.lng);
-      if(h.distance) h.distance = parseFloat(h.distance);
-      if(h.denivele) h.denivele = parseInt(h.denivele,10);
-      const idx = $('#hidIndex').value;
-      if(idx !== '') hikes[+idx] = h; else hikes.push(h);
-      save(); render();
-      (e.target).reset(); $('#hidIndex').value = '';
-      $('#drawerTitle').textContent = 'Nouvelle randonnée';
-      closeDrawer();
+      const h=Object.fromEntries(['date','title','heure','desc','lieu','accomp','lat','lng','distance','denivele','gpx','remarques'].map(id=>[id,$('#'+id).value.trim()]));
+      if(h.lat)h.lat=parseFloat(h.lat);if(h.lng)h.lng=parseFloat(h.lng);if(h.distance)h.distance=parseFloat(h.distance);if(h.denivele)h.denivele=parseInt(h.denivele);
+      const idx=$('#hidIndex').value;if(idx!=='')hikes[+idx]=h;else hikes.push(h);
+      save();render();e.target.reset();$('#hidIndex').value='';$('#drawerTitle').textContent='Nouvelle randonnée';closeDrawer();
     });
 
-    // Export / Import ——————————————————————————
-    $('#exportBtn').onclick = () => {
-      const blob = new Blob([JSON.stringify(hikes, null, 2)], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = 'randos.json'; a.click(); URL.revokeObjectURL(a.href);
-    };
-    $('#importBtn').onclick = () => $('#filePicker').click();
-    $('#filePicker').onchange = async (e)=>{
-      const f = e.target.files[0]; if(!f) return;
-      const text = await f.text();
-      try{ const data = JSON.parse(text); if(Array.isArray(data)){ hikes = data; save(); render(); closeDrawer(); } else alert('Fichier invalide'); }
-      catch(err){ alert('JSON invalide'); }
-      e.target.value = '';
-    };
+    $('#addBtn').onclick=()=>{$('#hikeForm').reset();$('#hidIndex').value='';$('#drawerTitle').textContent='Nouvelle randonnée';openDrawer();};
+    $('#closeDrawer').onclick=closeDrawer;
 
-    // Open/Close drawer
-    $('#addBtn').onclick = () => { $('#hikeForm').reset(); $('#hidIndex').value=''; $('#drawerTitle').textContent='Nouvelle randonnée'; openDrawer(); };
-    $('#closeDrawer').onclick = closeDrawer;
-
-    // Seed example (first run)
-    load();
-    if(!hikes.length){
-      hikes = [
-        {date:'2025-09-23', title:'Forêt de Montmorency', desc:'Découverte de la forêt domaniale avec ses châtaigniers centenaires…', lieu:'Montmorency', lat:49.000, lng:2.320, difficulty:'Facile', distance:8, denivele:120, duree:'3h', accomp:'Saïd', gpx:'', places:'12/20'},
-        {date:'2025-10-01', title:'Vallée de Chevreuse', desc:'Randonnée dans le Parc Naturel avec traversée de villages pittoresques…', lieu:'Chevreuse', lat:48.706, lng:2.042, difficulty:'Moyen', distance:12, denivele:380, duree:'4h30', accomp:'Mélanie', gpx:'', places:'8/18'}
-      ];
-      save();
-    }
-    render();
+    load();render();
   </script>
 </body>
 </html>
